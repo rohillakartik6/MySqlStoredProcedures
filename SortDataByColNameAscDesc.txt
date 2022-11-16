@@ -1,0 +1,9 @@
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SortData`(
+IN COLUMNNAME varchar(100), IN OrderOF varchar(100)
+)
+BEGIN
+SET @query = CONCAT('SELECT * FROM users ORDER BY ', COLUMNNAME,' ', OrderOF);
+	PREPARE statement FROM @query;
+	EXECUTE statement;
+	DEALLOCATE PREPARE statement;
+END

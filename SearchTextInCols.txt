@@ -1,0 +1,11 @@
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SortName`(
+IN SearchText varchar(100)
+)
+BEGIN
+/*if(OrderOF = 0,set @sortOrder = 'ASC',set @sortOrder = 'desc');*/
+/*SET @query = CONCAT('SELECT * FROM dapper_Training.users WHERE UserName LIKE "%',SearchText,'%"');*/
+SET @query = CONCAT('SELECT * FROM users WHERE concat(user.FirstName," ", user.LastName)', ' LIKE "%',SearchText,'%"');
+	PREPARE statement FROM @query;
+	EXECUTE statement;
+	DEALLOCATE PREPARE statement;
+END
