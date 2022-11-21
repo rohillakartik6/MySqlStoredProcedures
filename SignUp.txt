@@ -1,0 +1,36 @@
+--This stored procedure creats user if mobile number does
+
+CREATE DEFINER=`mindit_dev`@`%` PROCEDURE `SignUp`(IN _name VARCHAR(100), IN _mobile VARCHAR(100) )
+BEGIN
+	IF( EXISTS 
+	(
+	   SELECT
+		  ID 
+	   FROM
+		  `User` 
+	   WHERE
+		  Mobile = _mobile 
+	)
+	) 
+	THEN
+	   SELECT
+		  0 IsSuccess,
+		  'User already with this mobile number.' Message;
+	ELSE
+	   INSERT INTO
+		  `User` ( `Name`, Mobile, IsActive, IsDeleted, CreatedBy, CreatedOn) 
+	   VALUES
+		  (
+			 _name,
+			 _mobile,
+			 1,
+			 0,
+			 0,
+			 NOW()
+		  )
+	;
+	SELECT
+	   1 IsSuccess,
+	   'User Created Successfully.' Message;
+	END IF;
+END
