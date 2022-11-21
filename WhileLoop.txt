@@ -1,0 +1,10 @@
+CREATE DEFINER=`mindit_dev`@`%` PROCEDURE `uspWhile`(IN _name VARCHAR(100), IN _mobile VARCHAR(100))
+BEGIN
+	DECLARE _num INT DEFAULT 0;
+    WHILE _num < 5 DO
+		/* INSERT INTO `user`( `Name`, Mobile, IsActive, IsDeleted, CreatedBy, CreatedOn)
+        Values('_name + _num', '_mobile + _num', 1, 0, 0, NOW()); */
+        SELECT (_mobile + _num);
+        SET _num = _num + 1;        
+	END WHILE;
+END
