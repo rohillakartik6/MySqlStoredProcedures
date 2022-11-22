@@ -1,0 +1,19 @@
+CREATE DEFINER=`mindit_dev`@`%` PROCEDURE `CreateShiftDuration`(
+_shiftDuration JSON
+)
+BEGIN
+DROP TEMPORARY TABLE IF EXISTS TempShiftDuration;
+CREATE TEMPORARY TABLE TempShiftDuration AS 
+SELECT *
+     FROM
+       JSON_TABLE(
+         _shiftDuration,
+         "$[*]"
+         COLUMNS(
+           Id FOR ORDINALITY,
+           ShiftDurations VARCHAR(5) PATH "$.ShiftDurations"
+         )
+       ) AS tt;
+
+select * from TempShiftDuration;
+END
