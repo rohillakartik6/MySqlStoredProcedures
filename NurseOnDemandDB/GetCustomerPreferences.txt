@@ -1,0 +1,15 @@
+CREATE DEFINER=`mindit_dev`@`%` PROCEDURE `GetCustomerPreferences`(IN _userid INT)
+BEGIN 
+SELECT 
+  PreferredCustomerType, 
+  PreferredLocation, 
+  PreferredMinRate, 
+  PreferredMaxRate, 
+  PreferredDays, 
+  PreferredShiftDuration, 
+  PreferredShift 
+FROM 
+  `user` 
+WHERE 
+  ID = _userid;
+END

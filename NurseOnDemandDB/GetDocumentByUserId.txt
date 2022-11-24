@@ -1,0 +1,4 @@
+CREATE DEFINER=`mindit_dev`@`%` PROCEDURE `GetDocumentByUserId`(IN _userid INT)
+BEGIN
+	SELECT CategoryId, Title, URL, Remarks from `document` where UserId = _userid;
+END

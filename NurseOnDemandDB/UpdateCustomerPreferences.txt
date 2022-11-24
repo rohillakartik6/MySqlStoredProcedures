@@ -1,0 +1,24 @@
+CREATE DEFINER=`mindit_dev`@`%` PROCEDURE `UpdateCustomerPreferences`(
+  IN _userid INT, 
+  IN _prefferedcustomertype INT, 
+  IN _location INT, 
+  IN _minrate VARCHAR(5), 
+  IN _maxrate VARCHAR(5), 
+  IN _days JSON, 
+  IN _shiftduration INT, 
+  IN _shift INT
+)
+BEGIN 
+UPDATE 
+  `user` 
+SET 
+  PreferredCustomerType = _prefferedcustomertype, 
+  PreferredLocation = _location, 
+  PreferredMinRate = _minrate, 
+  PreferredMaxRate = _maxrate, 
+  PreferredDays = _days, 
+  PreferredShiftDuration = _shiftduration, 
+  PreferredShift = _shift 
+WHERE 
+  ID = _userid;
+END

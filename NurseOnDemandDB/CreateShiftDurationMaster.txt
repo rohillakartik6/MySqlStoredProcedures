@@ -1,0 +1,54 @@
+CREATE DEFINER=`mindit_dev`@`%` PROCEDURE `CreateShiftDurationMaster`(IN _data JSON)
+BEGIN DECLARE _totalItem INT;
+DECLARE _iteration INT;
+DECLARE _datastore VARCHAR(64);
+DROP 
+  TEMPORARY TABLE IF EXISTS TempTbl;
+CREATE TEMPORARY TABLE TempTbl AS 
+SELECT 
+  * 
+FROM 
+  JSON_TABLE(
+    _data, 
+    "$[*]" COLUMNS(
+      Id FOR ORDINALITY, 
+      ShiftDurations VARCHAR(5) PATH "$.ShiftDurations"
+    )
+  ) AS tt;
+SET 
+  _totalItem = (
+    SELECT 
+      Count(*) 
+    FROM 
+      TempTbl
+  );
+SELECT 
+  * 
+from 
+  TempTbl;
+SELECT 
+  _totalItem;
+SET 
+  _iteration = 1;
+WHILE _iteration <= _totalItem DO 
+SET 
+  _datastore = (
+    SELECT 
+      ShiftDurations 
+    FROM 
+      TempTbl 
+    WHERE 
+      Id = _iteration
+  );
+IF(_datastore IS NOT NULL) THEN INSERT INTO shiftdurationmaster(ShiftDurations) 
+VALUES 
+  (_datastore);
+END IF;
+SET 
+  _iteration = _iteration + 1;
+END While;
+Select 
+  * 
+from 
+  shiftdurationmaster;
+END

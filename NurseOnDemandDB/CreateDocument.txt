@@ -1,0 +1,28 @@
+CREATE DEFINER=`mindit_dev`@`%` PROCEDURE `CreateDocument`(
+IN _userid INT,
+IN _categoryid INT,
+IN _title VARCHAR(100),
+IN _url VARCHAR(500),
+IN _remarks VARCHAR(500)
+)
+BEGIN
+	   INSERT INTO
+		  `document` ( CategoryId, Title, URL, Remarks, UserId, CreatedBy, CreatedOn, ModifiedBy, ModifiedOn) 
+	   VALUES
+		  (
+			_categoryid,
+			 _title,
+			 _url,
+			 _remarks,
+             _userId,
+             0,
+			 NOW(),
+             0,
+             NOW()
+		  )
+	;
+	SELECT
+	   1 IsSuccess,
+	   'User Created Successfully.' Message;
+/*	END IF; */
+END

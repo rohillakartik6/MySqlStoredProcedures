@@ -1,0 +1,24 @@
+CREATE DEFINER=`mindit_dev`@`%` PROCEDURE `InsertReferenceByUserId`(
+  IN _userid INT, 
+  IN _type INT, 
+  IN _contactname VARCHAR(64), 
+  IN _contactno VARCHAR(100), 
+  IN _position VARCHAR(100), 
+  IN _companyname VARCHAR(255), 
+  IN _companyemail VARCHAR(255)
+)
+BEGIN INSERT INTO `references` (
+  `Type`, ContactName, ContactNo, Position, 
+  CompanyName, CompanyEmail, UserId, 
+  CreatedBy, CreatedOn
+) 
+VALUES 
+  (
+    _type, _contactname, _contactno, _position, 
+    _companyname, _companyemail, _userId, 
+    0, NOW()
+  );
+SELECT 
+  1 IsSuccess, 
+  'User Created Successfully.' Message;
+END

@@ -1,0 +1,56 @@
+CREATE DEFINER=`mindit_dev`@`%` PROCEDURE `CreateOpportunityMaster`(IN _data JSON)
+BEGIN 
+DECLARE _totalItem INT;
+DECLARE _iteration INT;
+DECLARE _datastore VARCHAR(64);
+DROP TEMPORARY TABLE IF EXISTS TempTbl;
+CREATE TEMPORARY TABLE TempTbl AS 
+SELECT 
+  * 
+FROM 
+  JSON_TABLE(
+    _data, 
+    "$[*]" COLUMNS(
+      Id FOR ORDINALITY, 
+      `Status` TINYINT(1) PATH "$.status"
+    )
+  ) AS tt;
+SET 
+  _totalItem = (
+    SELECT 
+      Count(*) 
+    FROM 
+      TempTbl
+  );
+SELECT 
+  * 
+from 
+  TempTbl;
+SELECT 
+  _totalItem;
+SET 
+  _iteration = 1;
+WHILE _iteration <= _totalItem DO 
+SET 
+  _datastore = (
+    SELECT 
+      `Status` 
+    FROM 
+      TempTbl 
+    WHERE 
+      Id = _iteration
+  );
+IF(_datastore IS NOT NULL) 
+THEN 
+INSERT INTO opportunitymaster(`Status`) 
+VALUES 
+  (_datastore);
+END IF;
+SET 
+  _iteration = _iteration + 1;
+END While;
+Select 
+  * 
+from 
+  Opportunitymaster;
+END

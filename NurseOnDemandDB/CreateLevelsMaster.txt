@@ -1,0 +1,54 @@
+CREATE DEFINER=`mindit_dev`@`%` PROCEDURE `CreateLevelsMaster`(IN _data JSON)
+BEGIN 
+DECLARE _totalItem INT;
+DECLARE _iteration INT;
+DECLARE _datastore VARCHAR(100);
+DROP TEMPORARY TABLE IF EXISTS TempTbl;
+CREATE TEMPORARY TABLE TempTbl AS 
+SELECT 
+  * 
+FROM 
+  JSON_TABLE(
+    _data, 
+    "$[*]" COLUMNS(
+      Id FOR ORDINALITY, 
+      Levels VARCHAR(64) PATH "$.Levels"
+    )
+  ) AS tt;
+SET 
+  _totalItem = (
+    SELECT 
+      Count(*) 
+    FROM 
+      TempTbl
+  );
+SELECT 
+  * 
+FROM 
+  TempTbl;
+SELECT 
+  _totalItem;
+SET 
+  _iteration = 1;
+WHILE _iteration <= _totalItem DO 
+SET 
+  _datastore = (
+    SELECT 
+      Levels
+    FROM 
+      TempTbl 
+    WHERE 
+      Id = _iteration
+  );
+IF(_datastore IS NOT NULL) THEN INSERT INTO levelsmaster(Levels) 
+VALUES 
+  (_datastore);
+END IF;
+SET 
+  _iteration = _iteration + 1;
+END WHILE;
+SELECT 
+  * 
+FROM
+  levelsmaster;
+END

@@ -1,0 +1,4 @@
+CREATE DEFINER=`mindit_dev`@`%` PROCEDURE `GetReferenceByUserId`(IN _userid INT)
+BEGIN
+	SELECT `Type`, ContactName, ContactNo, Position, CompanyName, CompanyEmail from `references` where UserId = _userid;
+END
