@@ -22,12 +22,6 @@ SET
     FROM 
       TempTbl
   );
-SELECT 
-  * 
-from 
-  TempTbl;
-SELECT 
-  _totalItem;
 SET 
   _iteration = 1;
 WHILE _iteration <= _totalItem DO 
@@ -40,15 +34,12 @@ SET
     WHERE 
       Id = _iteration
   );
-IF(_experience IS NOT NULL) THEN INSERT INTO experiencemaster(Experience) 
+IF(_experience IS NOT NULL) THEN INSERT INTO ExperienceMaster(Experience) 
 VALUES 
   (_experience);
 END IF;
 SET 
   _iteration = _iteration + 1;
 END While;
-SELECT 
-  * 
-FROM 
-  experiencemaster;
+SELECT 1 AS IsSuccess, 'Experiences Created Successfully.' AS message;
 END

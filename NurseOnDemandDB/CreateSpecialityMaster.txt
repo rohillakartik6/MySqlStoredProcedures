@@ -22,12 +22,6 @@ SET
     FROM 
       TempTbl
   );
-SELECT 
-  * 
-from 
-  TempTbl;
-SELECT 
-  _totalItem;
 SET 
   _iteration = 1;
 WHILE _iteration <= _totalItem DO 
@@ -47,8 +41,5 @@ END IF;
 SET 
   _iteration = _iteration + 1;
 END While;
-Select 
-  * 
-from 
-  SpecialityMaster;
+SELECT 1 AS IsSuccess,  'Speciality Created Successfully.' AS Message ;
 END

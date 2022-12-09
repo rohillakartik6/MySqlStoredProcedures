@@ -1,0 +1,59 @@
+CREATE DEFINER=`admin`@`%` PROCEDURE `GetUsersList`( 
+-- PURPOSE: This User Gets all users and also filter users with pagination.
+-- AUTHOR: KARTIK ROHILLA
+-- Created On: 09-12-2022
+-- Modified On: 09-12-2022
+-- Modified By: Kartik Rohilla
+   IN _Name varchar(64),
+    IN _Mobile varchar(10),
+    IN _Role int,
+    IN _isActive int,
+   IN _limit int,
+    IN _offset int
+)
+
+BEGIN
+
+DECLARE _isExists INT DEFAULT 0;
+
+DECLARE _query varchar(1000);
+    SET _query = ('SELECT `Name`, Email, Mobile, SubTypeName, isActive, u.Id FROM `user` AS u inner join usertype AS ut ON u.UserTypeID = ut.ID ');
+    
+IF(_Name != '' OR _Mobile != '' OR _Role != 0 OR _isActive != -1) THEN
+	SET _query = concat(_query, 'where ');
+    IF(_Name != '') THEN
+		SET _query = concat(_query, 'u.Name like "%', _Name, '%" ');
+        
+		SET _isExists = 1;
+    END IF;
+	IF(_Mobile != '') THEN
+		SET _isExists = 1;
+        if _isExists = 1 then
+			SET _query = concat(_query, 'and ');
+        END IF;
+        SET _query = concat(_query, ' u.Mobile like "%', _Mobile, '%" ');
+        
+    END IF;
+    IF(_Role != 0) THEN
+		SET _isExists = 1;
+        IF _isExists = 1 THEN
+			SET _query = concat(_query, 'and ');
+        END IF;
+		SET _query = concat(_query, ' ut.ID = ', _Role, ' ');
+    END IF;
+    IF(_isActive != -1) THEN
+    SET _isExists = 1;
+        IF _isExists = 1 THEN
+			SET _query = concat(_query, 'and ');
+        END IF;
+		SET _query = concat(_query, 'u.isActive like ', _isActive);
+    END IF;
+END IF;
+
+SET _query = concat(_query, ' LIMIT ', _limit, ' OFFSET ', _offset);
+SELECT _query;
+SET @_query = _query;
+PREPARE stmt FROM @_query;
+EXECUTE stmt;
+
+END

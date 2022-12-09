@@ -22,12 +22,6 @@ SET
     FROM 
       TempTbl
   );
-SELECT 
-  * 
-FROM 
-  TempTbl;
-SELECT 
-  _totalItem;
 SET 
   _iteration = 1;
 WHILE _iteration <= _totalItem DO 
@@ -47,8 +41,5 @@ END IF;
 SET 
   _iteration = _iteration + 1;
 END WHILE;
-SELECT 
-  * 
-FROM
-  levelsmaster;
+SELECT 1 AS IsSuccess, 'Levels Created Sucessfully.' as Message;
 END
