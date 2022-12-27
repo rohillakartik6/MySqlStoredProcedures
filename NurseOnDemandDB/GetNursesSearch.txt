@@ -1,0 +1,62 @@
+CREATE DEFINER=`admin`@`%` PROCEDURE `GetNursesSearch`(
+	-- PURPOSE: This User Gets all nurses list and also filter users with pagination.
+	-- AUTHOR: KARTIK ROHILLA
+	-- Created On: 27-12-2022
+	-- Modified On: 
+	-- Modified By: 
+	IN _name varchar(64),
+	IN _specialities int,
+    IN _profession varchar(64),
+    IN _experience int,
+    IN _status int,
+    IN _limit int,
+    IN _offset int
+)
+BEGIN
+	DECLARE isExists INT DEFAULT 0;
+
+	DECLARE query varchar(1000);
+    SET query = ('SELECT `Name`, Specialities, ProfessionName, Experience, s.`Status` FROM  `user` AS u INNER JOIN experiencemaster AS e ON u.ExperienceID = e.Id INNER JOIN statusmaster AS s ON u.`Status` = s.Id WHERE u.UserTypeID = 1 ');
+    
+    
+	IF(_name IS NOT NULL OR _profession IS NOT NULL OR _experience IS NOT NULL OR _status IS NOT NULL) THEN
+	SET isExists = 1;
+    IF(_name IS NOT NULL) THEN
+		if isExists = 1 then
+			SET query = concat(query, 'and ');
+		END IF;
+		SET query = concat(query, 'u.Name like "%', _name, '%" ');
+    END IF;
+	IF(_specialities IS NOT NULL) THEN
+        if isExists = 1 then
+			SET query = concat(query, 'and ');
+        END IF;
+        SET query = concat(query, ' JSON_EXTRACT(JSON_EXTRACT(Specialities, "$[0]"), "$.Id") = ', _specialities, ' ');
+    END IF; 
+    IF(_profession IS NOT NULL) THEN
+        IF isExists = 1 THEN
+			SET query = concat(query, 'and ');
+        END IF;
+		SET query = concat(query, ' u.ProfessionName LIKE "%', _profession, '%" ');
+    END IF;
+    IF(_experience IS NOT NULL) THEN
+        IF isExists = 1 THEN
+			SET query = concat(query, 'and ');
+        END IF;
+		SET query = concat(query, ' u.ExperienceID = ', _experience, ' ');
+    END IF;
+    IF(_status IS NOT NULL) THEN
+        IF isExists = 1 THEN
+			SET query = concat(query, 'and ');
+        END IF;
+		SET query = concat(query, 'u.Status = ', _status);
+    END IF;
+END IF; 
+    
+    SET query = CONCAT(query, ' LIMIT ', _limit, ' OFFSET ', _offset);
+    
+    SELECT query;
+    SET @query = query;
+	PREPARE stmt FROM @query;
+	EXECUTE stmt;
+END
